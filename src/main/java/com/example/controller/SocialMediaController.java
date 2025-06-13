@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.*;
 
 import com.example.entity.*;
 import com.example.service.*;
+
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -19,9 +21,9 @@ import java.util.List;
  @RestController
 public class SocialMediaController {
 
-    AccountService accountService;
+    private AccountService accountService;
 
-    MessageService messageService;
+    private MessageService messageService;
 
     @Autowired
     public SocialMediaController(AccountService accountService, MessageService messageService){
@@ -47,6 +49,9 @@ public class SocialMediaController {
     @PostMapping(value = "/messages")
     public ResponseEntity<Message> postMessage(@RequestBody Message message){
         Message newMessage = messageService.createMessage(message);
+        if (newMessage == null){
+            return ResponseEntity.status(400).build();
+        } 
         return ResponseEntity.ok(newMessage);
     }
 
@@ -59,15 +64,15 @@ public class SocialMediaController {
 
     // submit a GET request on the endpoint GET localhost:8080/messages/{messageId}
     @GetMapping("/messages/{messageId}")
-    public ResponseEntity<Message> getMessageById(@RequestBody Message messageId){
-        Message message = messageService.findMessageById(messageId.getMessageId());
+    public ResponseEntity<Message> getMessageById(@PathVariable int messageId){
+        Message message = messageService.findMessageById(messageId);
         return ResponseEntity.ok(message);
     }
 
     // submit a DELETE request on the endpoint DELETE localhost:8080/messages/{messageId}
     @DeleteMapping("/messages/{messageId}")
-    public ResponseEntity<?> delMessageById(@RequestBody Message messageId){
-        boolean deleted = messageService.deleteMessageById(messageId.getMessageId());
+    public ResponseEntity<?> delMessageById(@PathVariable int messageId){
+        boolean deleted = messageService.deleteMessageById(messageId);
         if (deleted) {
             return ResponseEntity.ok(1);
         } else {
@@ -77,8 +82,8 @@ public class SocialMediaController {
 
     // submit a PATCH request on the endpoint PATCH localhost:8080/messages/{messageId}
     @PatchMapping("/messages/{messageId}")
-    public ResponseEntity<?> patchMessage(@RequestBody Message messageText){
-        boolean updated = messageService.editMessageById(messageText.getMessageId(), messageText.getMessageText());
+    public ResponseEntity<?> patchMessage(@PathVariable int messageId, @RequestBody Message messageText){
+        boolean updated = messageService.editMessageById(messageId, messageText.getMessageText());
         if (updated){
             return ResponseEntity.ok(1);
         } else {
@@ -88,9 +93,10 @@ public class SocialMediaController {
 
     // submit a GET request on the endpoint GET localhost:8080/accounts/{accountId}/messages
     @GetMapping("/accounts/{accountId}/messages")
-    public ResponseEntity<List<Message>> getMessagesByAccount(@PathVariable Long accoundId){
-        List<Message> messages = messageService.getMessagesByAccountId(accoundId);
-        return ResponseEntity.ok(messages);
+    public ResponseEntity<List<Message>> getMessagesByAccount(@PathVariable Integer accountId){
+        List<Message> messages = messageService.getMessagesByAccountId(accountId);
+        return ResponseEntity.ok().body(messages);
     }
+
 
 }

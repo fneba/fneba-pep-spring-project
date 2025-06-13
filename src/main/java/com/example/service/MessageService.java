@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import com.example.entity.*;
 import java.util.Optional;
 import com.example.repository.*;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -65,12 +67,8 @@ public class MessageService {
         return false;
     }
 
-    public List<Message> getMessagesByAccountId(Long accountId){
-        Optional<List<Message>> optionalList = messageRepository.findAllByPosted(accountId);
-        if (optionalList.isPresent()) {
-            return optionalList.get();
-        } else {
-            return List.of();
-        }
+    public List<Message> getMessagesByAccountId(Integer accountId){
+        return messageRepository.findByPostedBy(accountId);
     }
+
 }
