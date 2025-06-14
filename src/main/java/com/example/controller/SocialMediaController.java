@@ -6,8 +6,6 @@ import org.springframework.web.bind.annotation.*;
 
 import com.example.entity.*;
 import com.example.service.*;
-
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -22,7 +20,6 @@ import java.util.List;
 public class SocialMediaController {
 
     private AccountService accountService;
-
     private MessageService messageService;
 
     @Autowired

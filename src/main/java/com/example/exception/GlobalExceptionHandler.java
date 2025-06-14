@@ -22,11 +22,4 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Void> handleValidationFailure(){
         return ResponseEntity.status(400).build();
     }
-
-    @ExceptionHandler({Exception.class, RuntimeException.class})
-    public ResponseEntity<Void> handleGenericException(Exception e){
-        e.printStackTrace();
-        return ResponseEntity.status(500).build();
-    }
-
 }
